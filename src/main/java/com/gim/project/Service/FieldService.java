@@ -8,4 +8,6 @@ public interface FieldService {
     List<Fields> getAllFields();
     List<Fields> getLimitedFields(Integer limit);
     List<Fields> getFieldsByBbox(Double x1,Double y1, Double x2,Double y2);
+    Fields getFieldsByPoint(Double x,Double y);
+
 }

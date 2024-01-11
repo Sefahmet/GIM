@@ -136,7 +136,8 @@ public class WFSLayer  {
                 String[] co = coords.split(" ");
                 List<Coordinate> geometry = new ArrayList();
                 for(int i=0; i<co.length; i+=2){
-                    geometry.add(new Coordinate(Double.valueOf(co[i]),Double.valueOf(co[i+1])));
+                    Point p = point_from25832_to4326(Double.valueOf(co[i+1]), Double.valueOf(co[i]));
+                    geometry.add(new Coordinate(p.getX(),p.getY()));
                 }
 
 
@@ -166,23 +167,31 @@ public class WFSLayer  {
      * @param lon
      * @return
      */
-    public Point point_from4326_to25832(double lat, double lon) {
-        Point p_25832 = null;
+    public static Point transformation(double lat, double lon, String sourceCRSVal, String targetCRSVal) {
+        Point p_target = null;
         try {
-            CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:4326");
-            CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:25832");
+
+            CoordinateReferenceSystem sourceCRS = CRS.decode("EPSG:" + sourceCRSVal);
+            CoordinateReferenceSystem targetCRS = CRS.decode("EPSG:" + targetCRSVal);
             MathTransform transform = CRS.findMathTransform(sourceCRS,  targetCRS, true);
             GeometryFactory factory = new GeometryFactory();
 
             Coordinate [] coordinates= {new Coordinate(lat,lon)};
             org.locationtech.jts.geom.CoordinateSequence coordinateSequence = new org.locationtech.jts.geom.impl.CoordinateArraySequence(coordinates);
-            Point p_4326 = new Point(coordinateSequence, factory);
+            Point p_source = new Point(coordinateSequence, factory);
 
-            p_25832 =  (Point)JTS.transform(p_4326, transform);
+            p_target =  (Point)JTS.transform(p_source, transform);
         } catch (MismatchedDimensionException | TransformException | FactoryException e) {
             e.printStackTrace();
         }
-        return p_25832;
+        return p_target;
+    }
+
+    public Point point_from4326_to25832(double lat, double lon) {
+        return transformation(lat,lon,"4326","25832");
+    }
+    public Point point_from25832_to4326(double lat, double lon) {
+        return transformation(lat,lon,"3044","4326");
     }
 
 

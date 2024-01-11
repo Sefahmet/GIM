@@ -27,4 +27,10 @@ public interface FieldsRepository extends JpaRepository<Fields,Integer> {
                                       @Param("x2") Double x2,
                                       @Param("y2") Double y2,
                                       @Param("srid1") Integer srid1);
+    @Query(value = "SELECT fid,field_id,soil, ST_AsText(geom) as  geometry,st_srid(geom) as srid " +
+            "FROM public.fields " +
+            "WHERE ST_Intersects(geom, ST_SetSRID(ST_Point(:x, :y), :srid1))", nativeQuery = true)
+    List<Fields> getFieldsByPoint(@Param("x") Double x1,
+                                 @Param("y") Double y1,
+                                 @Param("srid1") Integer srid1);
 }

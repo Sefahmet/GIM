@@ -40,4 +40,19 @@ public class FieldServiceImpl implements FieldService {
             throw e;
         }
     }
+
+    @Override
+    public Fields getFieldsByPoint(Double x, Double y) {
+        try {
+            Integer srid = fieldsRepository.getLimitedFieldsGeometryAsText(1).get(0).getSrid();
+            List<Fields> fields = fieldsRepository.getFieldsByPoint(x, y, srid);
+            if (fields.size() == (0)) {
+                return null;
+            } else {
+                return fields.get(0);
+            }
+        }catch (Exception e){
+            throw e;
+        }
+    }
 }

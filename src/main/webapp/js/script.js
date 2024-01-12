@@ -18,58 +18,83 @@ const map = new ol.Map({
 });
 
 
+const fetchInitial = async () => {
 
-fetch(URL).then(response => {
-      if (response.ok) {
-          return response.json();
-      } else {
-          throw new Error('Connection is unsuccessful.');
-      }
-  }).then(data => {
-
-      geoData = data.map(item => item.geometry);
-
-      const olGeometries = geoData.map((geometry) => {
-        return geometry.map((point) => {
-            return ol.proj.fromLonLat([point.y, point.x]);
-        });
-      });
-
-      const polygonStyle = new ol.style.Style({
-        stroke: new ol.style.Stroke({
-          color: 'blue', // line
-          width: 3 //linewidth
-        }),
-        fill: new ol.style.Fill({
-          color: 'rgba(146,104,41, 1)' //fill
-        })
-      });
-
-      const vectorLayer = new ol.layer.Vector({
-        source: new ol.source.Vector({
-            features: olGeometries.map(function (geometry) {
-                return new ol.Feature({
-                    geometry: new ol.geom.Polygon([geometry])
-                });
-            })
-        }),
-        style: [polygonStyle]
-      });
+  const res = await fetch(URL);
+  const resData = await res.json();
   
-      map.addLayer(vectorLayer);
+  geoData = resData.map(item => item.geometry);
 
-  
-  }).catch(error => {
-      console.error('Connection is unsuccessful.', error);
+  const olGeometries = geoData.map((geometry) => {
+    return geometry.map((point) => {
+        return ol.proj.fromLonLat([point.y, point.x]);
+    });
   });
+
+  const polygonStyle = new ol.style.Style({
+    stroke: new ol.style.Stroke({
+      color: 'blue', // line
+      width: 3 //linewidth
+    }),
+    fill: new ol.style.Fill({
+      color: 'rgba(146,104,41, 1)' //fill
+    })
+  });
+
+  const vectorLayer = new ol.layer.Vector({
+    source: new ol.source.Vector({
+        features: olGeometries.map(function (geometry) {
+            return new ol.Feature({
+                geometry: new ol.geom.Polygon([geometry])
+            });
+        })
+    }),
+    style: [polygonStyle]
+  });
+
+  map.addLayer(vectorLayer);
+};
+
+const fetchPoints = async (lat, lon) => {
+  const res = await fetch(`http://localhost:8080/api/fields/point?lat=${lat}&lon=${lon}`)
+  const resData = await res.json();
+  document.getElementById("soil").innerHTML = resData.soil;
+  document.getElementById("fid").innerHTML = resData.fid;
+  await fetchFidSpecies(resData.fid);
+};
+
+const fetchFidSpecies = async (fid) => {
+  const res = await fetch(`http://localhost:8080/api/species/fid?fid=${fid}`);
+  const resData = await res.json();
+  document.getElementById("plant").innerHTML = resData[0].plant;
+  document.getElementById("year").innerHTML = resData[0].year;
+  document.getElementById("subspecies").innerHTML = resData[0].subspecies;
+};
+const fetchFidTreatment = async (fid) => {
+  const res = await fetch(`http://localhost:8080/api/treatment/fid?fid=${fid}`);
+  const resData = await res.json();
+  document.getElementById("plant").innerHTML = resData[0].plant;
+  document.getElementById("year").innerHTML = resData[0].year;
+  document.getElementById("subspecies").innerHTML = resData[0].subspecies;
+};
+
 
 const select = new ol.interaction.Select();
 map.addInteraction(select);
 
-// Select listener
+fetchInitial();
+
+map.on("click", function (e) {
+  const position = ol.proj.toLonLat(e.coordinate);
+  const [lon, lat] = position;
+  fetchPoints(lat, lon);
+});
+
 select.on('select', function(e) {
+
+  
   e.selected.forEach(function(feature) {
-    // Create new still
+    console.log("feature", feature);
     const newStyle = new ol.style.Style({
         stroke: new ol.style.Stroke({
             color: 'black', // new line color
@@ -84,52 +109,3 @@ select.on('select', function(e) {
     feature.setStyle(newStyle);
 });
 })
-
-
-
-map.on("click", function (e) {
-  const position = ol.proj.toLonLat(e.coordinate);
-  const [lon, lat] = position;
-  fetch(`http://localhost:8080/api/fields/point?lat=${lat}&lon=${lon}`)
-  .then(res => {
-    if(res.status === 200) return res.json()
-    })
-  .then(res => {
-      fid = res.fid;
-    document.getElementById("soil").innerHTML = res.soil;
-    document.getElementById("fid").innerHTML = res.fid;
-  });
-  var fid = document.getElementById("fid").innerHTML;
-
-  fetch(`http://localhost:8080/api/species/fid?fid=${fid}`)
-
-  .then(res => {
-      console.log(res)
-      if(res.status === 200) return res.json()
-
-  })
-  .then(res => {
-      document.getElementById("plant").innerHTML = res[0].plant;
-      document.getElementById("year").innerHTML = res[0].year;
-      document.getElementById("subspecies").innerHTML = res[0].subspecies;
-  });
-
-    fetch(`http://localhost:8080/api/treatment/fid?fid=${fid}`)
-
-        .then(res => {
-            console.log(res)
-            if(res.status === 200) return res.json()
-
-        })
-        .then(res => {
-            document.getElementById("plant").innerHTML = res[0].plant;
-            document.getElementById("year").innerHTML = res[0].year;
-            document.getElementById("subspecies").innerHTML = res[0].subspecies;
-        });
-
-
-
-
-
-});
-

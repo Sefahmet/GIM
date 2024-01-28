@@ -12,4 +12,7 @@ import java.util.List;
 public interface SpeciesRepository extends JpaRepository<Species,Integer> {
     @Query(value = "SELECT * FROM public.species where field_id = :fid", nativeQuery = true)
     List<Species> getSpeciesByFid(@Param("fid") String fid);
+
+
+
 }

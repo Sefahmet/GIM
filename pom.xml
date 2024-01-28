@@ -55,6 +55,58 @@
         </dependency>
 
 
+        <!--fuseki-->
+        <!-- https://mvnrepository.com/artifact/com.jcraft/jsch -->
+        <dependency>
+            <groupId>com.jcraft</groupId>
+            <artifactId>jsch</artifactId>
+            <version>0.1.55</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.jena/jena -->
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena-libs</artifactId>
+            <version>3.13.1</version>
+            <type>pom</type>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.dataformat/jackson-dataformat-yaml -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.dataformat</groupId>
+            <artifactId>jackson-dataformat-yaml</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/com.fasterxml.jackson.core/jackson-databind -->
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-lang3 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-api -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-simple -->
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>2.0.9</version>
+        </dependency>
+
+
     </dependencies>
 
     <build>

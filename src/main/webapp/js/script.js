@@ -15,46 +15,7 @@ let checBoxVectorLayer;
 let CheckBoxFids = [];
 let langChoice = "DE";
 
-let dictionary = {
-  "Winter Barley": "Wintergerste",
-  "Winter Rapeseed": "Winterraps",
-  "BTS 440": "BTS 440",
-  "Cherry": "Kirsche",
-  "Parabrow Clay": "Parabraunerde",
-  "Pseudogley": "Backwater Soil",
-  "Avalon": "Avalon",
-  "Sugar Beet": "Zuckerrüben",
-  "Meredian": "Meredian",
-  "DLR": "DLR",
-  "Rendzina": "Rendzina",
-  "Sommergerste": "Spring Barley",
-  "Apfel": "Apple",
-  "GHA-Plant": "GHA-Pflanzen",
-  "Wintergerste": "Winter Barley",
-  "Benchmark": "Benchmark",
-  "GHA-Pflanzen": "GHA-Plant",
-  "Kirsche": "Cherry",
-  "Parabraunerde": "Parabrow Clay",
-  "Lisanna": "Lisanna",
-  "Äpfel": "Apple",
-  "Winterweizen": "Winter Wheat",
-  "Pear": "Birne",
-  "Winterraps": "Winter Rapeseed",
-  "IOL": "IOL",
-  "NAWARO": "NAWARO",
-  "Kamerad": "Kamerad",
-  "Water Plants": "Wasser",
-  "Backwater Soil": "Pseudogley",
-  "Birne": "Pear",
-  "Lomerit": "Lomerit",
-  "Apple": "Äpfel",
-  "Alcedo": "Alcedo",
-  "Wasser": "Water Plants",
-  "Zuckerrüben": "Sugar Beet",
-  "Reform": "Reform",
-  "Winter Wheat": "Winterweizen",
-  "Spring Barley": "Sommergerste"
-}
+let dictionary;
 
 const map = new ol.Map({
 	target: 'map',
@@ -78,9 +39,9 @@ const fetchInitial = async () => {
   const uniquePlantRes = await fetch(ALL_PLANTS_URL);
   uniquePlants = await uniquePlantRes.json();
 
-  //const dictionaryRes = await fetch(DICTIONARY_URL);
+  const dictionaryRes = await fetch(DICTIONARY_URL);
   
-  //dictionary = await dictionaryRes.json();
+  dictionary = await dictionaryRes.json();
 
   initialData = resData;
 
